@@ -1,12 +1,15 @@
 "use client";
 
+import { addMonths, endOfMonth, format, getDay, isSameDay, startOfMonth, subMonths } from "date-fns";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useMemo, useState } from "react";
 import {
   BarChart3,
   BookOpen,
   Brain,
   CalendarCheck,
+  ChevronLeft,
   ChevronRight,
   Compass,
   GraduationCap,
@@ -20,6 +23,7 @@ import {
   Sparkles,
   SpellCheck,
   Target,
+  X,
   Volume2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -132,13 +136,115 @@ function TopNav() {
           <ProfileSwitcher compact />
         </div>
         <div className="ml-auto hidden xl:block">
-          <ThemeSwitcher compact />
+          <HeaderCheckInCalendar />
         </div>
+        <HeaderStyleMenu />
         <Button variant="secondary" size="icon" onClick={toggleRightPanel} title="折叠学习状态栏">
           {preference.rightPanelOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
         </Button>
       </div>
     </header>
+  );
+}
+
+function HeaderStyleMenu() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <Button variant="secondary" size="icon" onClick={() => setOpen((value) => !value)} title="样式设置">
+        {open ? <X size={18} /> : <Settings size={18} />}
+      </Button>
+      {open && (
+        <div className="absolute right-0 top-12 z-50 w-[min(92vw,560px)] rounded-2xl border border-[var(--line)] bg-[var(--card-solid)] p-4 shadow-2xl">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <div className="text-sm font-semibold">样式设置</div>
+              <div className="text-xs text-muted">主题、明暗、动效和字号</div>
+            </div>
+            <button type="button" className="rounded-lg p-2 text-muted hover:bg-[var(--soft)]" onClick={() => setOpen(false)} aria-label="关闭样式设置">
+              <X size={16} />
+            </button>
+          </div>
+          <ThemeSwitcher compact />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HeaderCheckInCalendar() {
+  const [month, setMonth] = useState(new Date());
+  const { checkIns, manualCheckIn } = useLearningStore();
+  const stats = useStudyStats();
+  const today = todayKey();
+  const todayRecord = checkIns[today];
+
+  const days = useMemo(() => {
+    const start = startOfMonth(month);
+    const end = endOfMonth(month);
+    const blanks = Array.from({ length: getDay(start) }, () => null);
+    const real = Array.from({ length: end.getDate() }, (_, index) => new Date(month.getFullYear(), month.getMonth(), index + 1));
+    return [...blanks, ...real];
+  }, [month]);
+
+  return (
+    <section className="flex h-[116px] w-[520px] items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--card)] px-4 py-3 shadow-sm">
+      <div className="w-36 shrink-0">
+        <div className="flex items-center justify-between gap-2">
+          <button type="button" className="rounded-lg p-1.5 text-muted hover:bg-[var(--soft)]" onClick={() => setMonth(subMonths(month, 1))} aria-label="上个月">
+            <ChevronLeft size={15} />
+          </button>
+          <div className="text-sm font-semibold">{format(month, "M月")}</div>
+          <button type="button" className="rounded-lg p-1.5 text-muted hover:bg-[var(--soft)]" onClick={() => setMonth(addMonths(month, 1))} aria-label="下个月">
+            <ChevronRight size={15} />
+          </button>
+        </div>
+        <div className="mt-2 grid grid-cols-7 gap-1">
+          {days.slice(0, 42).map((day, index) => {
+            if (!day) return <span key={`blank-${index}`} className="h-3" />;
+            const key = todayKey(day);
+            const checked = checkIns[key]?.checkedIn;
+            const isToday = isSameDay(day, new Date());
+            return (
+              <span
+                key={key}
+                title={`${key}${checked ? " 已打卡" : ""}`}
+                className={`h-3 rounded-sm border ${
+                  checked
+                    ? "border-[var(--accent)] bg-[var(--accent)]"
+                    : isToday
+                      ? "border-[var(--accent-3)] bg-[color-mix(in_srgb,var(--accent-3)_20%,transparent)]"
+                      : "border-[var(--line)] bg-[var(--card-solid)]"
+                }`}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="text-xs text-muted">学习足迹</div>
+            <div className="mt-1 text-sm font-semibold">{todayRecord?.checkedIn ? "今日已打卡" : "今日待打卡"}</div>
+          </div>
+          <CalendarCheck size={18} className="text-[var(--accent)]" />
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
+          <div className="rounded-xl bg-[var(--soft)] px-2 py-1.5">
+            <div className="text-muted">连续</div>
+            <strong>{stats.currentStreak}</strong>
+          </div>
+          <div className="rounded-xl bg-[var(--soft)] px-2 py-1.5">
+            <div className="text-muted">本月</div>
+            <strong>{Object.values(checkIns).filter((item) => item.checkedIn && item.date.startsWith(format(month, "yyyy-MM"))).length}</strong>
+          </div>
+          <button type="button" className="rounded-xl bg-[var(--primary)] px-2 py-1.5 text-[var(--primary-foreground)] disabled:opacity-60" disabled={todayRecord?.checkedIn} onClick={() => manualCheckIn(today)}>
+            {todayRecord?.checkedIn ? "完成" : "打卡"}
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
 

@@ -15,7 +15,9 @@ export default function DashboardPage() {
             <ProgressSnapshot />
           </div>
           <aside className="grid content-start gap-5 md:grid-cols-2 2xl:grid-cols-1">
-            <CheckInCalendarCard />
+            <div className="xl:hidden">
+              <CheckInCalendarCard />
+            </div>
             <LearnerLevelCard />
           </aside>
         </div>
