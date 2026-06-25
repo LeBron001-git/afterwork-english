@@ -134,10 +134,11 @@ function TopNav() {
 }
 
 function RightLearningPanel() {
+  const pathname = usePathname();
   const { preference, level, checkIns } = useLearningStore();
   const stats = useStudyStats();
   const today = checkIns[todayKey()];
-  if (!preference.rightPanelOpen) return null;
+  if (!preference.rightPanelOpen || pathname === "/dashboard") return null;
   return (
     <aside className="sticky top-0 hidden h-screen w-80 shrink-0 border-l border-[var(--line)] p-4 xl:block">
       <div className="grid gap-4">

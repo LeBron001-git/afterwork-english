@@ -19,11 +19,11 @@ export function LearnerLevelCard() {
             <p className="text-sm text-muted">成长等级</p>
             <h2 className="mt-1 text-2xl font-semibold">Lv.{level.currentLevel} {level.currentTitle}</h2>
           </div>
-          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)]">
+          <div className="grid h-12 w-12 place-items-center rounded-xl bg-[var(--primary)] text-[var(--primary-foreground)]">
             <Award size={25} />
           </div>
         </div>
-        <div className="mt-4 rounded-2xl bg-[var(--soft)] p-4">
+        <div className="mt-4 rounded-xl bg-[var(--soft)] p-4">
           <div className="flex items-center justify-between text-sm">
             <span>{current.icon} 徽章</span>
             <span>{level.totalXp} XP</span>
@@ -33,7 +33,7 @@ export function LearnerLevelCard() {
           </div>
           <p className="mt-2 text-sm text-muted">距离下一等级还差 {level.xpToNextLevel} XP</p>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-2">
           <Metric label="今日获得" value={`${level.todayXp} XP`} />
           <Metric label="本周获得" value={`${level.weekXp} XP`} />
         </div>
@@ -57,7 +57,7 @@ export function LearnerLevelCard() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[var(--line)] bg-[var(--card)] p-3">
+    <div className="rounded-xl border border-[var(--line)] bg-[var(--card)] p-3 text-center">
       <div className="text-xs text-muted">{label}</div>
       <div className="font-semibold">{value}</div>
     </div>

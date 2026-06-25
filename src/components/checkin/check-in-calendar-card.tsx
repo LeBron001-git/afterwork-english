@@ -38,7 +38,7 @@ export function CheckInCalendarCard() {
           <Button size="icon" variant="ghost" onClick={() => setMonth(addMonths(month, 1))}><ChevronRight size={17} /></Button>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-7 gap-2 text-center text-xs text-muted">
+      <div className="mt-4 grid grid-cols-7 gap-1.5 text-center text-xs text-muted">
         {["日", "一", "二", "三", "四", "五", "六"].map((day) => <span key={day}>{day}</span>)}
         {days.map((day, index) => {
           if (!day) return <span key={`blank-${index}`} />;
@@ -51,7 +51,7 @@ export function CheckInCalendarCard() {
               key={key}
               onClick={() => setSelected(key)}
               title={checked ? `学习 ${record.minutes} 分钟，获得 ${record.xpEarned} XP` : "暂无记录"}
-              className={`relative aspect-square rounded-xl border text-sm transition hover:-translate-y-0.5 ${
+              className={`relative aspect-square min-h-9 rounded-lg border text-sm transition hover:-translate-y-0.5 ${
                 checked ? "border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_22%,transparent)] text-[var(--foreground)]" : "border-[var(--line)] bg-[var(--card)]"
               } ${today ? "ring-2 ring-[var(--accent-3)]" : ""} ${selected === key ? "scale-105" : ""}`}
             >
@@ -61,12 +61,12 @@ export function CheckInCalendarCard() {
           );
         })}
       </div>
-      <div className="mt-5 grid grid-cols-3 gap-2 text-sm">
+      <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
         <Metric label="连续" value={`${stats.currentStreak}天`} />
         <Metric label="本月" value={`${monthDays}天`} />
         <Metric label="本周" value={`${weekRate}%`} />
       </div>
-      <div className="mt-4 rounded-2xl bg-[var(--soft)] p-4">
+      <div className="mt-4 rounded-xl bg-[var(--soft)] p-4">
         <p className="text-sm font-medium">{selectedRecord?.checkedIn ? "这一天学过了" : "这一天还空着"}</p>
         <p className="mt-1 text-sm text-muted">{selectedRecord?.note ?? lastEncouragement}</p>
         <div className="mt-3 flex gap-2">
@@ -80,7 +80,7 @@ export function CheckInCalendarCard() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[var(--line)] bg-[var(--card)] p-3">
+    <div className="rounded-xl border border-[var(--line)] bg-[var(--card)] p-3 text-center">
       <div className="text-xs text-muted">{label}</div>
       <div className="font-semibold">{value}</div>
     </div>
