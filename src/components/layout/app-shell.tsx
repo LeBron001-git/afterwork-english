@@ -138,10 +138,12 @@ function TopNav() {
         <div className="ml-auto hidden xl:block">
           <HeaderCheckInCalendar />
         </div>
-        <HeaderStyleMenu />
-        <Button variant="secondary" size="icon" onClick={toggleRightPanel} title="折叠学习状态栏">
-          {preference.rightPanelOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
-        </Button>
+        <div className="flex items-center gap-2 xl:flex-col xl:gap-1.5">
+          <HeaderStyleMenu />
+          <Button className="h-10 w-10" variant="secondary" size="icon" onClick={toggleRightPanel} title="折叠学习状态栏">
+            {preference.rightPanelOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
+          </Button>
+        </div>
       </div>
     </header>
   );
@@ -152,11 +154,11 @@ function HeaderStyleMenu() {
 
   return (
     <div className="relative">
-      <Button variant="secondary" size="icon" onClick={() => setOpen((value) => !value)} title="样式设置">
+      <Button className="h-10 w-10" variant="secondary" size="icon" onClick={() => setOpen((value) => !value)} title="样式设置">
         {open ? <X size={18} /> : <Settings size={18} />}
       </Button>
       {open && (
-        <div className="absolute right-0 top-12 z-50 w-[min(92vw,560px)] rounded-2xl border border-[var(--line)] bg-[var(--card-solid)] p-4 shadow-2xl">
+        <div className="absolute right-0 top-12 z-50 w-[min(92vw,560px)] rounded-2xl border border-[var(--line)] bg-[var(--card-solid)] p-4 shadow-2xl xl:right-12 xl:top-0">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
               <div className="text-sm font-semibold">样式设置</div>
@@ -189,8 +191,8 @@ function HeaderCheckInCalendar() {
   }, [month]);
 
   return (
-    <section className="flex h-[116px] w-[520px] items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--card)] px-4 py-3 shadow-sm">
-      <div className="w-36 shrink-0">
+    <section className="flex h-[146px] w-[660px] items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--card)] px-4 py-3 shadow-sm">
+      <div className="w-[260px] shrink-0">
         <div className="flex items-center justify-between gap-2">
           <button type="button" className="rounded-lg p-1.5 text-muted hover:bg-[var(--soft)]" onClick={() => setMonth(subMonths(month, 1))} aria-label="上个月">
             <ChevronLeft size={15} />
@@ -200,9 +202,16 @@ function HeaderCheckInCalendar() {
             <ChevronRight size={15} />
           </button>
         </div>
-        <div className="mt-2 grid grid-cols-7 gap-1">
+        <div className="mt-1.5 grid grid-cols-7 gap-1 text-center text-[9px] font-medium text-muted">
+          {["日", "一", "二", "三", "四", "五", "六"].map((weekday) => (
+            <span key={weekday} className="leading-none">
+              {weekday}
+            </span>
+          ))}
+        </div>
+        <div className="mt-1 grid grid-cols-7 gap-1">
           {days.slice(0, 42).map((day, index) => {
-            if (!day) return <span key={`blank-${index}`} className="h-3" />;
+            if (!day) return <span key={`blank-${index}`} className="h-5" />;
             const key = todayKey(day);
             const checked = checkIns[key]?.checkedIn;
             const isToday = isSameDay(day, new Date());
@@ -210,14 +219,16 @@ function HeaderCheckInCalendar() {
               <span
                 key={key}
                 title={`${key}${checked ? " 已打卡" : ""}`}
-                className={`h-3 rounded-sm border ${
+                className={`grid h-5 place-items-center rounded-md border text-[10px] font-semibold leading-none transition ${
                   checked
-                    ? "border-[var(--accent)] bg-[var(--accent)]"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--primary-foreground)]"
                     : isToday
-                      ? "border-[var(--accent-3)] bg-[color-mix(in_srgb,var(--accent-3)_20%,transparent)]"
-                      : "border-[var(--line)] bg-[var(--card-solid)]"
+                      ? "border-[var(--accent-3)] bg-[color-mix(in_srgb,var(--accent-3)_18%,transparent)] text-[var(--foreground)]"
+                      : "border-[var(--line)] bg-[var(--card-solid)] text-muted"
                 }`}
-              />
+              >
+                {format(day, "d")}
+              </span>
             );
           })}
         </div>
