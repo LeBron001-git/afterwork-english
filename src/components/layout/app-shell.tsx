@@ -57,6 +57,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <RightLearningPanel />
         </div>
         <MobileTabBar />
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event("afterwork-english:open-word-search"))}
+          className="focus-ring fixed bottom-24 right-4 z-40 grid h-12 w-12 place-items-center rounded-2xl bg-[var(--primary)] text-[var(--primary-foreground)] shadow-2xl lg:hidden"
+          aria-label="打开查词"
+        >
+          <Search size={20} />
+        </button>
         <CommandWordSearch />
       </div>
     </ThemeProvider>
@@ -112,7 +120,8 @@ function TopNav() {
           <span className="font-semibold">Afterwork</span>
         </Link>
         <button
-          onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+          type="button"
+          onClick={() => window.dispatchEvent(new Event("afterwork-english:open-word-search"))}
           className="focus-ring ml-auto hidden h-11 min-w-72 items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--card)] px-3 text-left text-sm text-muted md:flex lg:ml-0"
         >
           <Search size={17} />
