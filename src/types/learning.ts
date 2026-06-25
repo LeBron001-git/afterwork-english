@@ -7,6 +7,8 @@ export type ThemeId =
 
 export type ColorMode = "light" | "dark" | "system";
 
+export type StudySlot = "morning" | "lunch" | "commute" | "night";
+
 export type CheckInRecord = {
   date: string;
   checkedIn: boolean;
@@ -99,6 +101,8 @@ export type UserPreference = {
   reduceMotion: boolean;
   largeFont: boolean;
   rightPanelOpen: boolean;
+  dailyMinutes: number;
+  studySlot: StudySlot;
 };
 
 export type WordReviewState = {

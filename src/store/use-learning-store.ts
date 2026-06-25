@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { addDays, isBefore, parseISO } from "date-fns";
 import { encouragements, xpRules, calculateLevel, streakStats, todayKey } from "@/lib/utils";
-import type { CheckInRecord, LearnerProfile, ThemeId, UserLevel, UserPreference, WordReviewState, WrongQuestionState } from "@/types/learning";
+import type { CheckInRecord, LearnerProfile, StudySlot, ThemeId, UserLevel, UserPreference, WordReviewState, WrongQuestionState } from "@/types/learning";
 
 type CompletionType = "word" | "grammar" | "sentence" | "phonetic" | "scenario" | "exercise" | "review";
 
@@ -24,6 +24,8 @@ type LearningState = {
   renameProfile: (profileId: string, name: string) => void;
   setTheme: (theme: ThemeId) => void;
   setColorMode: (mode: UserPreference["colorMode"]) => void;
+  setDailyMinutes: (minutes: number) => void;
+  setStudySlot: (slot: StudySlot) => void;
   toggleReduceMotion: () => void;
   toggleLargeFont: () => void;
   toggleRightPanel: () => void;
@@ -166,6 +168,8 @@ export const useLearningStore = create<LearningState>()(
         reduceMotion: false,
         largeFont: false,
         rightPanelOpen: true,
+        dailyMinutes: 20,
+        studySlot: "night",
       },
       checkIns: {},
       favoriteWords: [],
@@ -205,6 +209,8 @@ export const useLearningStore = create<LearningState>()(
         }),
       setTheme: (theme) => set((state) => ({ preference: { ...state.preference, theme } })),
       setColorMode: (colorMode) => set((state) => ({ preference: { ...state.preference, colorMode } })),
+      setDailyMinutes: (dailyMinutes) => set((state) => ({ preference: { ...state.preference, dailyMinutes } })),
+      setStudySlot: (studySlot) => set((state) => ({ preference: { ...state.preference, studySlot } })),
       toggleReduceMotion: () => set((state) => ({ preference: { ...state.preference, reduceMotion: !state.preference.reduceMotion } })),
       toggleLargeFont: () => set((state) => ({ preference: { ...state.preference, largeFont: !state.preference.largeFont } })),
       toggleRightPanel: () => set((state) => ({ preference: { ...state.preference, rightPanelOpen: !state.preference.rightPanelOpen } })),
@@ -318,6 +324,15 @@ export const useLearningStore = create<LearningState>()(
         if (!state) return;
         state.profiles = { ...defaultProfiles(), ...(state.profiles ?? {}) };
         state.activeProfileId = state.activeProfileId ?? "owner";
+        state.preference = {
+          theme: state.preference?.theme ?? "minimal-pro",
+          colorMode: state.preference?.colorMode ?? "system",
+          reduceMotion: state.preference?.reduceMotion ?? false,
+          largeFont: state.preference?.largeFont ?? false,
+          rightPanelOpen: state.preference?.rightPanelOpen ?? true,
+          dailyMinutes: state.preference?.dailyMinutes ?? 20,
+          studySlot: state.preference?.studySlot ?? "night",
+        };
         state.wordReviews = state.wordReviews ?? {};
         state.wrongQuestions = state.wrongQuestions ?? {};
         const next = recomputeLevel(state.checkIns);

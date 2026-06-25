@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { ProfileSwitcher } from "@/components/profile/profile-switcher";
+import { StudyPlanSettings } from "@/components/settings/study-plan-settings";
 import { ShareAccessPanel } from "@/components/share/share-access-panel";
 import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 
@@ -15,6 +16,7 @@ export default function SettingsPage() {
         <section className="card p-6">
           <ThemeSwitcher />
         </section>
+        <StudyPlanSettings />
         <ProfileSwitcher />
         <ShareAccessPanel />
         <section className="card p-6">
