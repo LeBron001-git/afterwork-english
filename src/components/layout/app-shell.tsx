@@ -191,8 +191,8 @@ function HeaderCheckInCalendar() {
   }, [month]);
 
   return (
-    <section className="flex h-[146px] w-[660px] items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--card)] px-4 py-3 shadow-sm">
-      <div className="w-[260px] shrink-0">
+    <section className="flex h-[188px] w-[740px] items-center gap-4 rounded-2xl border border-[var(--line)] bg-[var(--card)] px-4 py-3 shadow-sm">
+      <div className="w-[300px] shrink-0">
         <div className="flex items-center justify-between gap-2">
           <button type="button" className="rounded-lg p-1.5 text-muted hover:bg-[var(--soft)]" onClick={() => setMonth(subMonths(month, 1))} aria-label="上个月">
             <ChevronLeft size={15} />
@@ -209,9 +209,9 @@ function HeaderCheckInCalendar() {
             </span>
           ))}
         </div>
-        <div className="mt-1 grid grid-cols-7 gap-1">
+        <div className="mt-1.5 grid grid-cols-7 gap-1">
           {days.slice(0, 42).map((day, index) => {
-            if (!day) return <span key={`blank-${index}`} className="h-5" />;
+            if (!day) return <span key={`blank-${index}`} className="h-6" />;
             const key = todayKey(day);
             const checked = checkIns[key]?.checkedIn;
             const isToday = isSameDay(day, new Date());
@@ -219,7 +219,7 @@ function HeaderCheckInCalendar() {
               <span
                 key={key}
                 title={`${key}${checked ? " 已打卡" : ""}`}
-                className={`grid h-5 place-items-center rounded-md border text-[10px] font-semibold leading-none transition ${
+                className={`grid h-6 place-items-center rounded-md border text-[11px] font-semibold leading-none transition ${
                   checked
                     ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--primary-foreground)]"
                     : isToday
@@ -266,7 +266,7 @@ function RightLearningPanel() {
   const today = checkIns[todayKey()];
   if (!preference.rightPanelOpen || pathname === "/dashboard") return null;
   return (
-    <aside className="sticky top-0 hidden h-screen w-80 shrink-0 border-l border-[var(--line)] p-4 xl:block">
+    <aside className="sticky top-[213px] hidden h-[calc(100vh-213px)] w-80 shrink-0 overflow-y-auto border-l border-[var(--line)] p-4 xl:block">
       <div className="grid gap-4">
         <section className="card p-4">
           <p className="text-sm text-muted">今日状态</p>
